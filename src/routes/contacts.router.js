@@ -1,6 +1,7 @@
 const express = require('express');
 const contactsController = require('../controllers/contacts.controller');
-const { methodNotAllowed } = require('../controllers/errors.controller'); 
+const { methodNotAllowed } = require('../controllers/errors.controller');
+const avatarUpload = require('../middlewares/avatar-upload.middleware');
 
 const router = express.Router();
 module.exports.setup = (app) => {
@@ -23,6 +24,8 @@ app.use('/api/v1/contacts', router);
  *          schema:
  *              type: string
  *          description: Filter by contact name
+ *        - $ref: '#/components/parameters/limitParam'
+ *        - $ref: '#/components/parameters/pageParam'
  *     tags:
  *        - contacts 
  *     responses:
@@ -43,7 +46,9 @@ app.use('/api/v1/contacts', router);
  *                                      contacts:
  *                                          type: array
  *                                          items:
- *                                              $ref: '#/components/schemas/Contact'       
+ *                                              $ref: '#/components/schemas/Contact'
+ *                                      metadata:
+ *                                          $ref: '#/components/schemas/PageinationMetadata'     
  */
 router.get('/', contactsController.getContactsByFilter);
 
@@ -56,7 +61,7 @@ router.get('/', contactsController.getContactsByFilter);
  *     requestBody:
  *          required: true
  *          content:
- *              multipart/from-data:
+ *              multipart/form-data:
  *                  schema:
  *                       $ref: '#/components/schemas/Contact'  
  *     tags:
@@ -79,7 +84,7 @@ router.get('/', contactsController.getContactsByFilter);
  *                                      contacts:
  *                                          $ref: '#/components/schemas/Contact'       
  */
-router.post('/', contactsController.createContact);
+router.post('/', avatarUpload, contactsController.createContact);
 
 /**
  * @swagger
@@ -138,7 +143,7 @@ router.get('/:id', contactsController.getContact);
  *     requestBody:
  *          required: true
  *          content:
- *              multipart/from-data:
+ *              multipart/form-data:
  *                  schema:
  *                       $ref: '#/components/schemas/Contact'
  *     tags:
@@ -161,7 +166,7 @@ router.get('/:id', contactsController.getContact);
  *                                      contacts:
  *                                          $ref: '#/components/schemas/Contact'       
  */
-router.put('/:id', contactsController.updateContact);
+router.put('/:id', avatarUpload, contactsController.updateContact);
 
 /**
  * @swagger
