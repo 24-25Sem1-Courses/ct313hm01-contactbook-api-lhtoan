@@ -48,7 +48,11 @@ app.use('/api/v1/contacts', router);
  *                                          items:
  *                                              $ref: '#/components/schemas/Contact'
  *                                      metadata:
- *                                          $ref: '#/components/schemas/PageinationMetadata'     
+ *                                          $ref: '#/components/schemas/PageinationMetadata'  
+ *          400:
+ *              description: Invalid query parameters
+ *          500:
+ *              description: Internal server error   
  */
 router.get('/', contactsController.getContactsByFilter);
 
@@ -82,7 +86,13 @@ router.get('/', contactsController.getContactsByFilter);
  *                                  type: object
  *                                  properties:
  *                                      contacts:
- *                                          $ref: '#/components/schemas/Contact'       
+ *                                          $ref: '#/components/schemas/Contact'    
+ *          400:
+ *              description: Invalid request body or missing required fields
+ *          415:
+ *              description: Unsupported media type, expected multipart/form-data
+ *          500:
+ *              description: Internal server error   
  */
 router.post('/', avatarUpload, contactsController.createContact);
 
@@ -97,7 +107,9 @@ router.post('/', avatarUpload, contactsController.createContact);
  *     responses:
  *          200:
  *              description: All contact deleted
- *              $ref: '#/components/responses/200NoData'       
+ *              $ref: '#/components/responses/200NoData'   
+ *          500:
+ *              description: Internal server error    
  */
 router.delete('/', contactsController.deleteAllContacts);
 router.all('/', methodNotAllowed);
@@ -128,7 +140,13 @@ router.all('/', methodNotAllowed);
  *                                  type: object
  *                                  properties:
  *                                      contacts:
- *                                          $ref: '#/components/schemas/Contact'       
+ *                                          $ref: '#/components/schemas/Contact'
+ *          400:
+ *              description: Invalid ID format
+ *          404:
+ *              description: Contact not found
+ *          500:
+ *              description: Internal server error       
  */
 router.get('/:id', contactsController.getContact);
 
@@ -164,7 +182,15 @@ router.get('/:id', contactsController.getContact);
  *                                  type: object
  *                                  properties:
  *                                      contacts:
- *                                          $ref: '#/components/schemas/Contact'       
+ *                                          $ref: '#/components/schemas/Contact'     
+ *          400:
+ *              description: Invalid request body or parameters
+ *          404:
+ *              description: Contact not found
+ *          415:
+ *              description: Unsupported media type, expected multipart/form-data
+ *          500:
+ *              description: Internal server error  
  */
 router.put('/:id', avatarUpload, contactsController.updateContact);
 
@@ -181,7 +207,13 @@ router.put('/:id', avatarUpload, contactsController.updateContact);
  *     responses:
  *          200:
  *              description: A  contact
- *              $ref: '#/components/schemas/Contact'       
+ *              $ref: '#/components/schemas/Contact'     
+ *          400:
+ *              description: Invalid ID format
+ *          404:
+ *              description: Contact not found
+ *          500:
+ *              description: Internal server error  
  */
 router.delete('/:id', contactsController.deleteContact);
 router.all('/:id', methodNotAllowed);
